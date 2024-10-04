@@ -1,21 +1,18 @@
 import { UserGateway } from '../../domain/ports/userGateway.ts'
 import { User } from '../../domain/user/user.model.ts'
+import { UserDetails } from '../../domain/user/user-details.model.ts'
 
 export class FetchUserGateway implements UserGateway {
   private BASE_URL = 'https://jsonplaceholder.typicode.com/'
 
   async getAll(): Promise<User[]> {
-    const rawUsers = await this.get('users')
-    const users = await rawUsers.json()
+    const users = await this.get('users')
 
-    // eslint-disable-next-line
     return Promise.all(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       users.map(async (user: any) => {
-        const rawTodos = await this.getTodos(user.id)
-        const todos = await rawTodos.json()
-
-        const rawAlbums = await this.getTodos(user.id)
-        const albums = await rawAlbums.json()
+        const todos = await this.getTodos(user.id)
+        const albums = await this.getTodos(user.id)
 
         return {
           id: user.id,
@@ -31,10 +28,36 @@ export class FetchUserGateway implements UserGateway {
   }
 
   private async get(query: string) {
-    return fetch(this.BASE_URL + query)
+    const response = await fetch(this.BASE_URL + query)
+    return response.json()
   }
 
   private async getTodos(userId: string) {
     return this.get(`todos?userId=${userId}`)
+  }
+
+  async getUserDetailsById(userId: string): Promise<UserDetails> {
+    const user = await this.getUserById(userId)
+    const albums = await this.getUserAlbums(userId)
+
+    return {
+      id: user.id,
+      name: user.name,
+      username: user.username,
+      email: user.email,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      albums: albums.map((album: any) => ({
+        id: album.id,
+        title: album.title,
+      })),
+    }
+  }
+
+  private getUserAlbums(userId: string) {
+    return this.get(`albums?userId=${userId}`)
+  }
+
+  private getUserById(userId: string) {
+    return this.get(`users/${userId}`)
   }
 }
