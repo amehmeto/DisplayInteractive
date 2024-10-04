@@ -19,7 +19,7 @@ function App() {
 
   return (
     <>
-      <h1>Display Interactive Dashboard</h1>
+      <h1>Display Interactive Test</h1>
       <br />
       <h2>Users list:</h2>
       {users.map((user) => (

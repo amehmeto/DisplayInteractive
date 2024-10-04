@@ -3,9 +3,7 @@ export type User = {
   name: string
   email: string
   website: string
-  company: {
-    name: string
-  }
-  todos: number
-  albums: never[]
+  company: string
+  nbTodos: number
+  nbAlbums: number
 }
