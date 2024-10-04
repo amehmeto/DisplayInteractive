@@ -1,10 +1,9 @@
 import { UserGateway } from '../../domain/ports/userGateway.ts'
 import { User } from '../../domain/user/user.model.ts'
 import { UserDetails } from '../../domain/user/user-details.model.ts'
+import { FetchGateway } from './fetch.gateway.ts'
 
-export class FetchUserGateway implements UserGateway {
-  private BASE_URL = 'https://jsonplaceholder.typicode.com/'
-
+export class FetchUserGateway extends FetchGateway implements UserGateway {
   async getAll(): Promise<User[]> {
     const users = await this.get('users')
 
@@ -25,11 +24,6 @@ export class FetchUserGateway implements UserGateway {
         }
       }),
     )
-  }
-
-  private async get(query: string) {
-    const response = await fetch(this.BASE_URL + query)
-    return response.json()
   }
 
   private async getTodos(userId: string) {
