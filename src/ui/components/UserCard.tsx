@@ -6,9 +6,12 @@ import {
   Link,
   Text,
 } from '@chakra-ui/react'
-import { User } from '../domain/user/user.model.ts'
+import { User } from '../../domain/user/user.model.ts'
+import { useNavigate } from 'react-router-dom'
 
 export function UserCard({ user }: { user: User }) {
+  const navigate = useNavigate()
+
   function capitalizeFirstLetter(string: string) {
     return string.charAt(0).toUpperCase() + string.slice(1)
   }
@@ -31,6 +34,7 @@ export function UserCard({ user }: { user: User }) {
         transition: '0.2s ease-in-out',
         border: '2px solid lightblue',
       }}
+      onClick={() => navigate(`/user/${user.id}`)}
     >
       <CardHeader
         bg="blue.400"

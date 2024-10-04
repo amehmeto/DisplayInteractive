@@ -16,7 +16,6 @@ export class FetchUserGateway implements UserGateway {
 
         const rawAlbums = await this.getTodos(user.id)
         const albums = await rawAlbums.json()
-        console.log(albums.length)
 
         return {
           id: user.id,
