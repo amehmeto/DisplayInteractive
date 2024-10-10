@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, useParams } from 'react-router-dom'
 import {
   Box,
   Heading,
@@ -8,7 +8,7 @@ import {
   SimpleGrid,
   Spinner,
 } from '@chakra-ui/react'
-import { dependencies } from '../../dependencies.ts'
+import { useDependencies } from '../../dependencies.ts'
 import { Album } from '../../domain/album/album.model.ts'
 import { Photo } from '../../domain/album/photo.model.ts'
 
@@ -16,14 +16,13 @@ export function AlbumPage() {
   const { id } = useParams()
   const [album, setAlbum] = useState<Album>()
   const [photos, setPhotos] = useState<Photo[]>()
+  const { albumGateway } = useDependencies()
 
   useEffect(() => {
-    const albumGateway = dependencies.albumGateway
+    if (!id) return
 
-    if (id) {
-      albumGateway.getAlbumById(id).then((album) => setAlbum(album))
-      albumGateway.getPhotosByAlbumId(id).then((photos) => setPhotos(photos))
-    }
+    albumGateway.getAlbumById(id).then((album) => setAlbum(album))
+    albumGateway.getPhotosByAlbumId(id).then((photos) => setPhotos(photos))
   }, [id])
 
   if (!album || !photos) return <Spinner size="xl" />

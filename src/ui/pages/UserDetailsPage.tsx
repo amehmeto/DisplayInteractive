@@ -1,27 +1,25 @@
 import { useEffect, useState } from 'react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
-import { dependencies } from '../../dependencies.ts'
+import { useDependencies } from '../../dependencies.ts'
 import { UserDetails } from '../../domain/user/user-details.model.ts'
 import {
   Box,
   Heading,
-  Spinner,
-  Text,
+  Link,
   List,
   ListItem,
-  Link,
+  Spinner,
+  Text,
 } from '@chakra-ui/react'
 
 export function UserDetailsPage() {
   const { id } = useParams()
   const [user, setUser] = useState<UserDetails>()
+  const { userGateway } = useDependencies()
 
   useEffect(() => {
-    if (id) {
-      dependencies.userGateway
-        .getUserDetailsById(id)
-        .then((user) => setUser(user))
-    }
+    if (!id) return
+    userGateway.getUserDetailsById(id).then((user) => setUser(user))
   }, [id])
 
   if (!user) return <Spinner size="xl" />
